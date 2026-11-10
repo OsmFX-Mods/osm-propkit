@@ -1,0 +1,48 @@
+# OS / System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs and Editors
+.idea/
+.vscode/
+.claude/
+*.suo
+*.sw?
+.env
+
+# Node / frontend dependencies and local files
+node_modules/
+ui/node_modules/
+ui/dist/
+ui/.env.local
+ui/.env.*.local
+ui/*.tsbuildinfo
+
+# Studio captures and local exports
+shots/
+shots/*
+exports/
+
+# Workflow and internal documentation
+PROPS_WORKFLOW.md
+props_workflow.md
+*workflow*.md
+reference_scripts/
+reference-scripts/
+marketing/
+
+# npm / yarn / pnpm logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Server / Log files
+*.log
+
+# Build and Release artifacts
+*.zip
+*.sha256
+build_release/
+release_notes.md
+

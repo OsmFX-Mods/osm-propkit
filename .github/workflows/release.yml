@@ -1,0 +1,55 @@
+name: Release Packaging
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g. 1.0.0)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Package Releases
+        id: build
+        run: python .github/scripts/release.py
+
+      - name: Create or Update GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.build.outputs.version }}
+        run: |
+          echo "Processing release tag: $TAG"
+          
+          # Delete existing release and tag on remote and locally if they exist to allow clean overwrite
+          gh release delete "$TAG" --yes || true
+          git tag -d "$TAG" || true
+          git push origin :refs/tags/"$TAG" || true
+          
+          # Create fresh release with asset zip and checksums
+          gh release create "$TAG" \
+            osm-propkit*.zip \
+            *.sha256 \
+            --title "$TAG" \
+            --notes-file release_notes.md

@@ -1,0 +1,196 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://osmfx.dev/schema/osm-propkit/pack@1.json",
+  "title": "OsmFX PropKit pack",
+  "description": "One file with a prop's defaults: profiles, interactions, default placements and studio scenes. See docs/PACKS.md.",
+  "type": "object",
+  "required": ["id"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "format": { "const": "osm-propkit/pack@1" },
+    "id": { "type": "string", "pattern": "^[a-z0-9_.-]+$", "maxLength": 48, "description": "Stable forever. Updates match on it" },
+    "name": { "type": "string", "maxLength": 80 },
+    "version": { "type": "string", "maxLength": 24, "description": "Compared numerically, 1.10.0 > 1.9.2" },
+    "author": { "type": "string", "maxLength": 80 },
+    "description": { "type": "string", "maxLength": 600 },
+    "url": { "type": "string", "maxLength": 200 },
+    "models": { "type": "array", "items": { "$ref": "#/definitions/model" } },
+    "placements": { "type": "array", "items": { "$ref": "#/definitions/placement" } },
+    "scenes": { "type": "array", "items": { "$ref": "#/definitions/scene" } }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "vec3": {
+      "oneOf": [
+        { "type": "object", "required": ["x", "y", "z"], "properties": { "x": { "type": "number" }, "y": { "type": "number" }, "z": { "type": "number" } }, "additionalProperties": false },
+        { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 }
+      ]
+    },
+    "spawn": {
+      "type": "object",
+      "properties": {
+        "mode": { "enum": ["local", "networked"] },
+        "collision": { "type": "boolean" },
+        "freeze": { "type": "boolean" },
+        "distance": { "type": "number", "minimum": 10, "maximum": 1500 },
+        "lod": { "type": "number", "minimum": 10, "maximum": 3000 },
+        "invincible": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "model": {
+      "type": "object",
+      "required": ["model"],
+      "properties": {
+        "model": { "type": "string", "maxLength": 64 },
+        "label": { "type": "string", "maxLength": 80 },
+        "category": { "type": "string", "maxLength": 40 },
+        "description": { "type": "string", "maxLength": 400 },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "spawn": { "$ref": "#/definitions/spawn" },
+        "worldTargets": { "type": "boolean", "description": "Also add the interactions to copies the map places" },
+        "interactions": { "type": "array", "items": { "$ref": "#/definitions/interaction" } },
+        "studio": { "type": "object" },
+        "variants": { "type": "array" }
+      },
+      "additionalProperties": false
+    },
+    "anim": {
+      "type": "object",
+      "properties": {
+        "dict": { "type": "string" }, "clip": { "type": "string" }, "flag": { "type": "integer", "minimum": 0, "maximum": 1023 },
+        "scenario": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "gates": {
+      "type": "object",
+      "properties": {
+        "groups": { "oneOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }, { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } }] },
+        "items": { "oneOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }, { "type": "object", "additionalProperties": { "type": "integer", "minimum": 1 } }] },
+        "anyItem": { "type": "boolean" },
+        "cooldown": { "type": "number", "minimum": 0 },
+        "cooldownScope": { "enum": ["player", "placement", "global"] },
+        "hideIneligible": { "type": "boolean" },
+        "state": { "type": "object" },
+        "hours": { "type": "array", "items": { "type": "number", "minimum": 0, "maximum": 24 }, "minItems": 2, "maxItems": 2 },
+        "onFoot": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "step": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "enum": ["progress", "anim", "wait", "notify", "sound", "ptfx", "clientEvent", "serverEvent", "command", "export", "giveItem", "removeItem", "giveMoney", "removeMoney", "setState", "swapModel", "pickup"] },
+        "duration": { "type": "integer", "minimum": 0 },
+        "label": { "type": "string" },
+        "anim": { "$ref": "#/definitions/anim" },
+        "prop": { "type": "object", "properties": { "model": { "type": "string" }, "bone": { "type": "integer" }, "pos": { "$ref": "#/definitions/vec3" }, "rot": { "$ref": "#/definitions/vec3" } } },
+        "canCancel": { "type": "boolean" },
+        "freeze": { "type": "boolean" },
+        "text": { "type": "string" },
+        "kind": { "enum": ["info", "success", "warning", "error"] },
+        "name": { "type": "string" },
+        "set": { "type": "string" },
+        "asset": { "type": "string" },
+        "scale": { "type": "number" },
+        "args": {},
+        "via": { "enum": ["net", "internal"] },
+        "command": { "type": "string" },
+        "resource": { "type": "string" },
+        "fn": { "type": "string" },
+        "side": { "enum": ["client", "server"] },
+        "item": { "type": "string" },
+        "count": { "type": "integer", "minimum": 1 },
+        "metadata": {},
+        "account": { "type": "string" },
+        "amount": { "type": "integer", "minimum": 0 },
+        "key": { "type": "string" },
+        "value": {},
+        "toggle": { "type": "boolean" },
+        "persist": { "type": "boolean" },
+        "model": { "type": "string" },
+        "respawn": { "type": "integer", "minimum": 0 },
+        "stopOnFail": { "type": "boolean" }
+      },
+      "allOf": [
+        { "if": { "properties": { "type": { "enum": ["giveItem", "removeItem"] } } }, "then": { "required": ["item"] } },
+        { "if": { "properties": { "type": { "enum": ["clientEvent", "serverEvent", "sound", "ptfx"] } } }, "then": { "required": ["name"] } },
+        { "if": { "properties": { "type": { "const": "export" } } }, "then": { "required": ["resource", "fn"] } },
+        { "if": { "properties": { "type": { "const": "command" } } }, "then": { "required": ["command"] } },
+        { "if": { "properties": { "type": { "const": "setState" } } }, "then": { "required": ["key"] } },
+        { "if": { "properties": { "type": { "const": "swapModel" } } }, "then": { "required": ["model"] } }
+      ]
+    },
+    "interaction": {
+      "type": "object",
+      "required": ["label"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9_.-]+$", "maxLength": 64 },
+        "label": { "type": "string", "maxLength": 80 },
+        "icon": { "type": "string", "description": "Font Awesome class, e.g. fas fa-wrench" },
+        "iconColor": { "type": "string", "pattern": "^#[0-9a-fA-F]{3,8}$" },
+        "description": { "type": "string", "maxLength": 160 },
+        "distance": { "type": "number", "minimum": 0.5, "maximum": 15 },
+        "point": { "$ref": "#/definitions/vec3", "description": "Metres from the model origin, in the prop's axes" },
+        "radius": { "type": "number", "minimum": 0.05, "maximum": 5 },
+        "bones": { "oneOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }] },
+        "gates": { "$ref": "#/definitions/gates" },
+        "steps": { "type": "array", "items": { "$ref": "#/definitions/step" }, "maxItems": 24 },
+        "enabled": { "type": "boolean" },
+        "order": { "type": "integer" }
+      },
+      "additionalProperties": false
+    },
+    "placement": {
+      "type": "object",
+      "required": ["key", "model", "pos"],
+      "properties": {
+        "key": { "type": "string", "pattern": "^[a-z0-9_.-]+$", "maxLength": 64, "description": "Stable inside the pack" },
+        "model": { "type": "string" },
+        "label": { "type": "string", "maxLength": 80 },
+        "group": { "type": "string", "maxLength": 48 },
+        "pos": { "$ref": "#/definitions/vec3" },
+        "rot": { "$ref": "#/definitions/vec3" },
+        "heading": { "type": "number" },
+        "mode": { "enum": ["local", "networked"] },
+        "distance": { "type": "number", "minimum": 10, "maximum": 1500 },
+        "lod": { "type": "number", "minimum": 10, "maximum": 3000 },
+        "collision": { "type": "boolean" },
+        "freeze": { "type": "boolean" },
+        "alpha": { "type": "integer", "minimum": 0, "maximum": 255 },
+        "bucket": { "type": "integer", "minimum": 0 },
+        "enabled": { "type": "boolean" },
+        "inherit": { "type": "boolean" },
+        "interactions": { "type": "array", "items": { "$ref": "#/definitions/interaction" } },
+        "anchor": {
+          "type": "object",
+          "required": ["model", "pos"],
+          "properties": {
+            "model": { "type": ["string", "integer"] },
+            "pos": { "$ref": "#/definitions/vec3" },
+            "rot": { "$ref": "#/definitions/vec3" },
+            "offset": { "$ref": "#/definitions/vec3" },
+            "local_rot": { "$ref": "#/definitions/vec3" },
+            "radius": { "type": "number", "minimum": 0.1, "maximum": 10 }
+          }
+        },
+        "interior": { "type": "object", "properties": { "hash": { "type": "integer" }, "room": { "type": "integer" } } },
+        "meta": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+    "scene": {
+      "type": "object",
+      "required": ["key", "name", "data"],
+      "properties": {
+        "key": { "type": "string" },
+        "name": { "type": "string", "maxLength": 80 },
+        "model": { "type": "string" },
+        "data": { "type": "object" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

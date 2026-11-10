@@ -1,0 +1,13 @@
+Cube Package MapPin MapPinLine Stack StackSimple Camera Aperture X MagnifyingGlass Plus Minus Trash Copy PencilSimple
+ArrowsOutCardinal ArrowsClockwise Globe CubeFocus Magnet ArrowLineDown Anchor AnchorSimple Crosshair Eye EyeSlash Lightning
+Hand HandGrabbing CaretRight CaretDown CaretLeft CaretUp ArrowLeft ArrowRight Check Warning Info DownloadSimple UploadSimple Export
+FileArrowDown FileCode Lightbulb Sun Moon CloudSun Drop Fire Wind User PersonSimple FilmSlate FilmStrip Image ImageSquare TextT
+Sparkle SlidersHorizontal Play Pause Stop Record Timer Clock Gear DotsThree DotsSixVertical ArrowUp ArrowDown Flask Lock LockOpen
+Key Wrench ShieldCheck Coins CurrencyDollar Bell SpeakerHigh Terminal Plug Code ArrowUUpLeft ArrowUUpRight FrameCorners GridFour
+Target Scan Rows SquaresFour ListBullets Funnel CheckCircle XCircle WarningCircle ArrowCounterClockwise Swap Toolbox Door Power
+ShoppingCart Coffee ForkKnife Chair Bed MusicNote Hammer GasPump Car Tire Clipboard Recycle Thermometer Gauge PaintBrush Palette
+CircleHalf VideoCamera Monitor Ruler Compass Tag Folder Cursor CursorClick Mouse Keyboard CornersOut CornersIn ArrowsIn ArrowsOut
+Cloud CloudRain Snowflake Fog Spotlight Flashlight Graph Shapes Circle CircleDashed Square Selection Link LinkBreak Hourglass
+Gift Backpack Coin Wallet Megaphone ChatText Broadcast Path Waves Planet Mountains House Buildings Ghost Bandaids Barbell Sliders
+FloppyDisk ClockCounterClockwise ArrowSquareOut ArrowsDownUp Faders FlowArrow GitDiff ArrowsSplit Info CheckSquare Rectangle
+Cylinder Video PictureInPicture BoundingBox Wall Drone Shutter Intersect Diamond DiamondsFour Columns SidebarSimple Crop

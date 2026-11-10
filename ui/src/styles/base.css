@@ -1,0 +1,22 @@
+/* CEF transparency, unlayered and imported first so no @layer can repaint the page. The dev canvas and the DUI board opt out. */
+html, body, #root {
+  background: transparent !important;
+  background-color: transparent !important;
+  color-scheme: unset !important;
+  margin: 0; padding: 0; width: 100%; height: 100%;
+  overflow: hidden;
+  color: #eeeeea;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+  -webkit-user-select: none; user-select: none;
+}
+*, *::before, *::after { box-sizing: border-box; }
+
+html[data-dev-mode='true'], html[data-dev-mode='true'] body, html[data-dev-mode='true'] #root {
+  background: #0b0c0e !important;
+  background-color: #0b0c0e !important;
+}
+html[data-board='true'], html[data-board='true'] body, html[data-board='true'] #root {
+  background: #121216 !important;
+}

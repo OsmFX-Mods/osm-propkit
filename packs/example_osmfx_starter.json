@@ -1,0 +1,147 @@
+{
+  "$schema": "../schema/pack.schema.json",
+  "format": "osm-propkit/pack@1",
+  "id": "osmfx_starter",
+  "name": "PropKit starter (example)",
+  "version": "1.0.0",
+  "author": "OsmFX",
+  "description": "An example pack with base-game props: a coffee machine you can buy from, a tool chest that opens and hands out a wrench to mechanics, and a workbench. Two default spots at Legion Square.",
+  "models": [
+    {
+      "model": "prop_vend_coffe_01",
+      "label": "Coffee Machine",
+      "category": "Retail",
+      "spawn": { "mode": "local", "collision": true, "freeze": true, "distance": 150, "lod": 300, "invincible": true },
+      "worldTargets": true,
+      "interactions": [
+        {
+          "id": "buy_coffee",
+          "label": "Buy a coffee ($5)",
+          "icon": "fas fa-mug-hot",
+          "iconColor": "#ffb46b",
+          "description": "Hot, black, five dollars",
+          "distance": 1.6,
+          "gates": { "cooldown": 20, "cooldownScope": "player" },
+          "steps": [
+            { "type": "removeMoney", "account": "cash", "amount": 5 },
+            { "type": "progress", "duration": 3000, "label": "Pouring", "anim": { "dict": "amb@prop_human_atm@male@idle_a", "clip": "idle_b", "flag": 1 }, "canCancel": false, "freeze": true },
+            { "type": "giveItem", "item": "coffee", "count": 1 },
+            { "type": "sound", "name": "PURCHASE", "set": "HUD_LIQUOR_STORE_SOUNDSET" },
+            { "type": "notify", "text": "Enjoy your coffee.", "kind": "success" }
+          ]
+        }
+      ]
+    },
+    {
+      "model": "prop_toolchest_05",
+      "label": "Tool Chest",
+      "category": "Workshop",
+      "spawn": { "mode": "local", "collision": true, "freeze": true, "distance": 120, "lod": 300, "invincible": true },
+      "interactions": [
+        {
+          "id": "open",
+          "label": "Open drawers",
+          "icon": "fas fa-box-open",
+          "distance": 1.8,
+          "gates": { "state": { "open": false }, "hideIneligible": true },
+          "steps": [
+            { "type": "anim", "anim": { "dict": "anim@heists@keypad@", "clip": "idle_a", "flag": 0 }, "duration": 900 },
+            { "type": "setState", "key": "open", "value": true }
+          ]
+        },
+        {
+          "id": "close",
+          "label": "Close drawers",
+          "icon": "fas fa-box",
+          "distance": 1.8,
+          "gates": { "state": { "open": true }, "hideIneligible": true },
+          "steps": [
+            { "type": "setState", "key": "open", "value": false }
+          ]
+        },
+        {
+          "id": "take_wrench",
+          "label": "Take a wrench",
+          "icon": "fas fa-wrench",
+          "distance": 1.8,
+          "gates": { "groups": { "mechanic": 0 }, "state": { "open": true }, "cooldown": 300, "cooldownScope": "player", "hideIneligible": true },
+          "steps": [
+            { "type": "progress", "duration": 2500, "label": "Searching the drawers", "anim": { "dict": "amb@prop_human_bum_bin@idle_b", "clip": "idle_d", "flag": 1 }, "canCancel": true, "freeze": true },
+            { "type": "giveItem", "item": "wrench", "count": 1 }
+          ]
+        }
+      ]
+    },
+    {
+      "model": "prop_tool_bench02",
+      "label": "Workbench",
+      "category": "Workshop",
+      "spawn": { "mode": "local", "collision": true, "freeze": true, "distance": 120, "lod": 300, "invincible": true },
+      "interactions": [
+        {
+          "id": "repair_kit",
+          "label": "Craft a repair kit",
+          "icon": "fas fa-screwdriver-wrench",
+          "distance": 2.0,
+          "point": { "x": 0.0, "y": 0.0, "z": 0.95 },
+          "radius": 0.6,
+          "gates": { "items": { "metalscrap": 3 } },
+          "steps": [
+            { "type": "removeItem", "item": "metalscrap", "count": 3 },
+            { "type": "progress", "duration": 6000, "label": "Crafting", "anim": { "dict": "mini@repair", "clip": "fixing_a_ped", "flag": 1 }, "canCancel": true, "freeze": true },
+            { "type": "giveItem", "item": "repairkit", "count": 1 },
+            { "type": "ptfx", "asset": "core", "name": "ent_brk_sparking_wires", "scale": 0.6, "duration": 1200 }
+          ]
+        }
+      ]
+    }
+  ],
+  "placements": [
+    {
+      "key": "legion_coffee",
+      "model": "prop_vend_coffe_01",
+      "label": "Legion coffee",
+      "group": "Starter: Legion Square",
+      "pos": { "x": 197.4410, "y": -935.0620, "z": 29.6869 },
+      "rot": { "x": 0.0, "y": 0.0, "z": 145.0 }
+    },
+    {
+      "key": "legion_chest",
+      "model": "prop_toolchest_05",
+      "label": "Legion tool chest",
+      "group": "Starter: Legion Square",
+      "pos": { "x": 200.1820, "y": -932.9150, "z": 29.6869 },
+      "rot": { "x": 0.0, "y": 0.0, "z": 145.0 }
+    }
+  ],
+  "scenes": [
+    {
+      "key": "coffee_hero",
+      "name": "Coffee machine, night studio",
+      "model": "prop_vend_coffe_01",
+      "data": {
+        "stage": { "mode": "void", "origin": { "x": 0, "y": 0, "z": 0 } },
+        "env": { "time": { "h": 23, "m": 0 }, "weather": "EXTRASUNNY", "look": { "name": "NG_filmic04", "strength": 0.5 }, "lodScale": 1, "parkPed": true },
+        "backdrop": { "mode": "sweep", "top": "#0d0d10", "bottom": "#2a2a30", "chroma": "#00ff40", "size": 14, "height": 8, "floor": true },
+        "camera": { "fov": 40, "roll": 0, "dof": { "on": false, "focus": 3, "range": 1.2, "strength": 0.6 } },
+        "items": [
+          { "id": "pr_subject", "kind": "prop", "name": "Coffee Machine", "model": "prop_vend_coffe_01", "subject": true, "visible": true, "pos": { "x": 0, "y": 0, "z": 0 }, "rot": { "x": 0, "y": 0, "z": 0 } },
+          { "id": "li_key", "kind": "light", "name": "Key light", "visible": true, "pos": { "x": -1.8, "y": -2.2, "z": 2.0 }, "rot": { "x": 0, "y": 0, "z": 0 }, "type": "spot", "kelvin": 5200, "color": "#ffe3c4", "intensity": 6, "range": 9, "angle": 38, "softness": 0.55, "shadow": true, "aim": true },
+          { "id": "li_fill", "kind": "light", "name": "Fill light", "visible": true, "pos": { "x": 2.2, "y": -1.6, "z": 1.2 }, "rot": { "x": 0, "y": 0, "z": 0 }, "type": "spot", "kelvin": 7200, "color": "#e6ebff", "intensity": 2.2, "range": 9, "angle": 50, "softness": 0.8, "shadow": false, "aim": true },
+          { "id": "li_rim", "kind": "light", "name": "Rim light", "visible": true, "pos": { "x": 0.8, "y": 2.4, "z": 2.2 }, "rot": { "x": 0, "y": 0, "z": 0 }, "type": "spot", "kelvin": 3200, "tint": "#ff8a3d", "color": "#ff8a3d", "intensity": 5, "range": 8, "angle": 34, "softness": 0.4, "shadow": false, "aim": true },
+          { "id": "fx_steam", "kind": "fx", "name": "Steam", "visible": true, "asset": "core", "effect": "ent_sht_steam", "pos": { "x": 0.1, "y": -0.35, "z": 1.05 }, "rot": { "x": 0, "y": 0, "z": 0 }, "scale": 0.4 }
+        ],
+        "shots": [
+          { "id": "cam_front", "name": "Three quarter", "pos": { "x": 1.7, "y": -2.6, "z": 1.35 }, "rot": { "x": -8, "y": 0, "z": 33 }, "fov": 40 }
+        ],
+        "keys": [],
+        "overlays": [
+          { "id": "ov_title", "kind": "text", "text": "Fresh coffee", "x": 0.07, "y": 0.14, "size": 0.075, "weight": 800, "color": "#f4f4f0", "align": "left" },
+          { "id": "ov_logo", "kind": "logo", "src": "osmfx", "x": 0.06, "y": 0.86, "size": 0.07, "opacity": 1 }
+        ],
+        "output": { "aspect": "1:1", "format": "png", "quality": 0.95, "width": 0, "matte": "none", "frames": 4, "exposure": 1, "contrast": 1.05, "saturation": 1, "vignette": 0.25, "key": { "tol": 0.18, "soft": 0.12, "spill": 0.6 } },
+        "guides": "thirds"
+      }
+    }
+  ]
+}
